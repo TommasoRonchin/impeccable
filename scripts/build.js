@@ -20,7 +20,9 @@ import {
   transformCursor,
   transformClaudeCode,
   transformGemini,
-  transformCodex
+  transformCodex,
+  transformAntigravity,
+  transformVSCode
 } from './lib/transformers/index.js';
 import { createAllZips } from './lib/zip.js';
 import { execSync } from 'child_process';
@@ -146,6 +148,8 @@ async function build() {
   transformClaudeCode(commands, skills, DIST_DIR, patterns);
   transformGemini(commands, skills, DIST_DIR, patterns);
   transformCodex(commands, skills, DIST_DIR, patterns);
+  transformAntigravity(commands, skills, DIST_DIR, patterns);
+  transformVSCode(commands, skills, DIST_DIR, patterns);
 
   // Transform for each provider (prefixed with i-)
   const prefixOptions = { prefix: 'i-', outputSuffix: '-prefixed' };
@@ -153,6 +157,8 @@ async function build() {
   transformClaudeCode(commands, skills, DIST_DIR, patterns, prefixOptions);
   transformGemini(commands, skills, DIST_DIR, patterns, prefixOptions);
   transformCodex(commands, skills, DIST_DIR, patterns, prefixOptions);
+  transformAntigravity(commands, skills, DIST_DIR, patterns, prefixOptions);
+  transformVSCode(commands, skills, DIST_DIR, patterns, prefixOptions);
 
   // Create ZIP bundles (both unprefixed and prefixed)
   await createAllZips(DIST_DIR);

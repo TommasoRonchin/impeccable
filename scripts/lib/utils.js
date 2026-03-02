@@ -6,28 +6,28 @@ import path from 'path';
  * Returns { frontmatter: object, body: string }
  */
 export function parseFrontmatter(content) {
-  const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/;
   const match = content.match(frontmatterRegex);
-  
+
   if (!match) {
     return { frontmatter: {}, body: content };
   }
-  
+
   const [, frontmatterText, body] = match;
   const frontmatter = {};
-  
+
   // Simple YAML parser (handles basic key-value and arrays)
   const lines = frontmatterText.split('\n');
   let currentKey = null;
   let currentArray = null;
-  
+
   for (const line of lines) {
     if (!line.trim()) continue;
-    
+
     // Calculate indent level
     const leadingSpaces = line.length - line.trimStart().length;
     const trimmed = line.trim();
-    
+
     // Array item at level 2 (nested under a key)
     if (trimmed.startsWith('- ') && leadingSpaces >= 2) {
       if (currentArray) {
@@ -40,7 +40,7 @@ export function parseFrontmatter(content) {
       }
       continue;
     }
-    
+
     // Property of array object (indented further)
     if (leadingSpaces >= 4 && currentArray && currentArray.length > 0) {
       const colonIndex = trimmed.indexOf(':');
@@ -52,14 +52,14 @@ export function parseFrontmatter(content) {
       }
       continue;
     }
-    
+
     // Top-level key-value pair
     if (leadingSpaces === 0) {
       const colonIndex = trimmed.indexOf(':');
       if (colonIndex > 0) {
         const key = trimmed.slice(0, colonIndex).trim();
         const value = trimmed.slice(colonIndex + 1).trim();
-        
+
         if (value) {
           frontmatter[key] = value;
           currentKey = key;
@@ -73,7 +73,7 @@ export function parseFrontmatter(content) {
       }
     }
   }
-  
+
   return { frontmatter, body: body.trim() };
 }
 
@@ -84,20 +84,20 @@ export function readFilesRecursive(dir, fileList = []) {
   if (!fs.existsSync(dir)) {
     return fileList;
   }
-  
+
   const files = fs.readdirSync(dir);
-  
+
   for (const file of files) {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
-    
+
     if (stat.isDirectory()) {
       readFilesRecursive(filePath, fileList);
     } else if (file.endsWith('.md')) {
       fileList.push(filePath);
     }
   }
-  
+
   return fileList;
 }
 
@@ -317,6 +317,16 @@ export const PROVIDER_PLACEHOLDERS = {
     model: 'GPT',
     config_file: 'AGENTS.md',
     ask_instruction: 'ask the user directly to clarify what you cannot infer.'
+  },
+  'antigravity': {
+    model: 'Antigravity',
+    config_file: 'task.md',
+    ask_instruction: 'STOP and call the notify_user tool to clarify.'
+  },
+  'vscode': {
+    model: 'Copilot',
+    config_file: 'package.json',
+    ask_instruction: 'ask the user directly to clarify what you cannot infer.'
   }
 };
 
@@ -342,7 +352,7 @@ export function replaceModelPlaceholder(content, provider) {
  */
 export function generateYamlFrontmatter(data) {
   const lines = ['---'];
-  
+
   for (const [key, value] of Object.entries(data)) {
     if (Array.isArray(value)) {
       lines.push(`${key}:`);
@@ -359,7 +369,7 @@ export function generateYamlFrontmatter(data) {
       lines.push(`${key}: ${value}`);
     }
   }
-  
+
   lines.push('---');
   return lines.join('\n');
 }
