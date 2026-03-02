@@ -51,7 +51,7 @@ export async function createProviderZip(providerDir, distDir, providerName) {
 export async function createAllZips(distDir) {
   console.log('\n📦 Creating ZIP bundles...');
 
-  const providers = ['cursor', 'claude-code', 'gemini', 'codex'];
+  const providers = ['cursor', 'claude-code', 'gemini', 'codex', 'vscode'];
 
   // Create unprefixed ZIPs
   for (const provider of providers) {

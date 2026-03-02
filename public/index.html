@@ -277,6 +277,28 @@
             </svg>
           </button>
         </article>
+
+        <article class="download-card" data-reveal>
+          <div class="download-card-icon">
+            <img src="https://img.logo.dev/code.visualstudio.com?token=pk_dtRHfeTyRzG5zZInUc65Xw&size=64&format=png" alt="VS Code logo" width="32" height="32" loading="lazy">
+          </div>
+          <h3 class="download-card-title">VS Code + Copilot</h3>
+          <button class="btn btn-primary" data-bundle="vscode" aria-label="Download VS Code bundle">
+            <span>Download</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+          </button>
+          <details class="download-card-details">
+            <summary>Setup instructions</summary>
+            <ol>
+              <li>Extract the ZIP to your project root</li>
+              <li>Commands appear as <code>/</code> prompts in Copilot Chat</li>
+              <li>Skills load automatically as custom instructions</li>
+            </ol>
+            <a href="https://code.visualstudio.com/docs/copilot/copilot-customization" target="_blank" rel="noopener">Learn more</a>
+          </details>
+        </article>
       </div>
     </section>
 
@@ -291,7 +313,7 @@
         <details class="faq-item">
           <summary class="faq-question">Where do I put the downloaded files?</summary>
           <div class="faq-answer">
-            <p>Extract the ZIP to your <strong>project root</strong> (same level as your <code>package.json</code> or <code>src/</code> folder). The files should create a hidden folder like <code>.claude/</code>, <code>.cursor/</code>, <code>.gemini/</code>, or <code>.codex/</code>.</p>
+            <p>Extract the ZIP to your <strong>project root</strong> (same level as your <code>package.json</code> or <code>src/</code> folder). The files should create a hidden folder like <code>.claude/</code>, <code>.cursor/</code>, <code>.gemini/</code>, <code>.codex/</code>, or <code>.github/</code>.</p>
             <p>Alternatively, you can install <strong>globally</strong> to your home directory:</p>
             <ul>
               <li>Claude Code: <code>~/.claude/</code></li>
@@ -299,6 +321,7 @@
               <li>Gemini CLI: <code>~/.gemini/</code></li>
               <li>Codex CLI: <code>~/.codex/</code></li>
             </ul>
+            <p>For <strong>VS Code + Copilot</strong>, files go in your project's <code>.github/</code> folder (project-level only).</p>
             <p>Project-level installation takes precedence and lets you version control your skills.</p>
           </div>
         </details>
@@ -312,6 +335,7 @@
             <ul>
               <li><strong>Cursor:</strong> Requires Nightly channel + Agent Skills enabled in Settings → Rules</li>
               <li><strong>Gemini CLI:</strong> Requires <code>@google/gemini-cli@preview</code> + Skills enabled via <code>/settings</code></li>
+              <li><strong>VS Code + Copilot:</strong> Requires GitHub Copilot Chat extension + prompt files enabled in settings</li>
             </ul>
           </div>
         </details>
@@ -325,6 +349,7 @@
               <li><strong>Cursor:</strong> <a href="https://docs.cursor.com" target="_blank" rel="noopener">Cursor Docs</a></li>
               <li><strong>Gemini CLI:</strong> <a href="https://geminicli.com/docs/" target="_blank" rel="noopener">Gemini CLI Docs</a></li>
               <li><strong>Codex CLI:</strong> <a href="https://github.com/openai/codex" target="_blank" rel="noopener">Codex GitHub</a></li>
+              <li><strong>VS Code + Copilot:</strong> <a href="https://code.visualstudio.com/docs/copilot/overview" target="_blank" rel="noopener">GitHub Copilot in VS Code</a></li>
             </ul>
             <p>Once you're comfortable with basic prompting and code generation, come back and give Impeccable a try.</p>
           </div>

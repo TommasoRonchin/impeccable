@@ -317,6 +317,11 @@ export const PROVIDER_PLACEHOLDERS = {
     model: 'GPT',
     config_file: 'AGENTS.md',
     ask_instruction: 'ask the user directly to clarify what you cannot infer.'
+  },
+  'vscode': {
+    model: 'Copilot',
+    config_file: '.github/copilot-instructions.md',
+    ask_instruction: 'ask the user directly to clarify what you cannot infer.'
   }
 };
 

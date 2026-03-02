@@ -102,6 +102,8 @@ export function getFilePath(type, provider, id) {
 			return join(distDir, "gemini", `GEMINI.${id}.md`);
 		} else if (provider === "codex") {
 			return join(distDir, "codex", ".codex", "skills", id, "SKILL.md");
+		} else if (provider === "vscode") {
+			return join(distDir, "vscode", ".github", "instructions", `${id}.instructions.md`);
 		}
 	} else if (type === "command") {
 		if (provider === "cursor") {
@@ -112,6 +114,8 @@ export function getFilePath(type, provider, id) {
 			return join(distDir, "gemini", ".gemini", "commands", `${id}.toml`);
 		} else if (provider === "codex") {
 			return join(distDir, "codex", ".codex", "prompts", `${id}.md`);
+		} else if (provider === "vscode") {
+			return join(distDir, "vscode", ".github", "prompts", `${id}.prompt.md`);
 		}
 	}
 	return null;
