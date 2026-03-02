@@ -31,8 +31,17 @@ export function transformVSCode(commands, skills, distDir, patterns = null, opti
             vscode: "^1.80.0"
         },
         categories: ["AI", "Programming Languages"],
-        activationEvents: [],
+        activationEvents: ["*"],
         main: "./dist/extension.js",
+        scripts: {
+            "compile": "tsc -p ./",
+            "watch": "tsc -watch -p ./",
+            "package": "vsce package"
+        },
+        devDependencies: {
+            "@types/vscode": "^1.80.0",
+            "typescript": "^5.1.3"
+        },
         contributes: {
             commands: [
                 {
@@ -57,6 +66,41 @@ export function transformVSCode(commands, skills, distDir, patterns = null, opti
     };
 
     writeFile(path.join(vscodeDir, 'package.json'), JSON.stringify(pkg, null, 2));
+
+    const tsconfig = {
+        compilerOptions: {
+            module: "NodeNext",
+            target: "ES2022",
+            outDir: "dist",
+            lib: ["ES2022", "DOM", "DOM.Iterable"],
+            sourceMap: true,
+            rootDir: "src",
+            strict: true,
+            skipLibCheck: true
+        },
+        include: ["src"]
+    };
+
+    writeFile(path.join(vscodeDir, 'tsconfig.json'), JSON.stringify(tsconfig, null, 2));
+
+    const vscodeConfigDir = path.join(vscodeDir, '.vscode');
+    ensureDir(vscodeConfigDir);
+
+    const launchJson = {
+        version: "0.2.0",
+        configurations: [
+            {
+                name: "Run Extension",
+                type: "extensionHost",
+                request: "launch",
+                args: [
+                    "--extensionDevelopmentPath=${workspaceFolder}"
+                ]
+            }
+        ]
+    };
+
+    writeFile(path.join(vscodeConfigDir, 'launch.json'), JSON.stringify(launchJson, null, 2));
 
     // 2. Create extension.ts
     const commandItems = commands.map(c => ({

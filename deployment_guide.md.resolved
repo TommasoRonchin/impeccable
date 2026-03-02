@@ -1,0 +1,92 @@
+# Deployment & Testing Guide
+
+This guide explains how to test the generated extensions locally and how to publish them to the Visual Studio Code Marketplace.
+
+## 1. Local Testing
+
+Since the build process generates a full extension project structure, you can test it directly in an Extension Development Host.
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) installed.
+- [Visual Studio Code](https://code.visualstudio.com/) installed.
+
+### Steps
+1. **Navigate to the extension folder:**
+   ```bash
+   cd dist/vscode
+   # OR for the Antigravity version:
+   cd dist/antigravity/vscode-extension
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Compile the TypeScript code:**
+   The `main` entry point in [package.json](file:///c:/Users/ronch/OneDrive/Documenti/repository%20github/impeccable/package.json) points to `./dist/extension.js`, which needs to be compiled from [./src/extension.ts](file:///c:/Users/ronch/OneDrive/Documenti/repository%20github/impeccable/dist-test/vscode/src/extension.ts).
+   ```bash
+   npm run compile
+   ```
+
+4. **Launch the Extension Development Host:**
+   - Open the extension folder in VS Code.
+   - Press `F5` (or go to the "Run and Debug" view and click "Extension").
+   - A new VS Code window (the "Extension Development Host") will open with your extension loaded.
+
+5. **Verify:**
+   - **Chat Participant**: Open Copilot Chat and type `@impeccable /audit`.
+   - **Status Bar**: Look for the "**✨ Impeccable**" icon in the bottom right corner (the same for both extensions). Click it to open the Quick Pick menu.
+
+---
+
+## 2. Publishing to the Marketplace
+
+To publish an extension, you need to use the `vsce` (Visual Studio Code Extensions) CLI tool.
+
+### Prerequisites
+1. **Create an Azure DevOps Account**: Go to [aex.dev.azure.com](https://aex.dev.azure.com) and create an organization.
+2. **Create a Personal Access Token (PAT)**:
+   - In Azure DevOps, go to **User settings** > **Personal access tokens**.
+   - Create a new token with **Scopes**: `Marketplace (Manage)`.
+3. **Create a Publisher**: Go to the [Visual Studio Marketplace Management Console](https://marketplace.visualstudio.com/manage) and create a publisher identity.
+4. **Update [package.json](file:///c:/Users/ronch/OneDrive/Documenti/repository%20github/impeccable/package.json)**: Ensure you have a unique `name`, `publisher`, and `version`.
+
+### Publishing Steps
+1. **Install `vsce` globally:**
+   ```bash
+   npm install -g @vscode/vsce
+   ```
+
+2. **Login to your publisher account:**
+   ```bash
+   vsce login <your-publisher-name>
+   # It will prompt for your Personal Access Token
+   ```
+
+3. **Package the extension (Optional - for manual install):**
+   This creates a `.vsix` file that can be shared and installed manually.
+   ```bash
+   vsce package
+   ```
+
+4. **Publish the extension:**
+   ```bash
+   vsce publish
+   ```
+
+> [!NOTE]
+> For the Antigravity extension, the publishing process is the same as it's built on the VS Code extension API.
+
+---
+
+## 3. Testing in Antigravity Agent
+
+The Antigravity extension is now **Plug & Play**. You no longer need to manually copy folders or files.
+
+1. **Install the extension**: Follow the "Local Testing" steps above using the folder `dist/antigravity/vscode-extension`.
+2. **Automatic Skill Loading**: Once the extension is active in the Antigravity IDE, the agent will automatically detect the bundled "Impeccable Frontend Design" skill.
+3. **Verify**: Type `/` in the agent chat. You should see all the Impeccable design commands (audit, polish, simplify, etc.) available as suggestions.
+
+> [!TIP]
+> This is the recommended way to use Impeccable in Antigravity: install the extension, and the agent becomes instantly smarter with design expertise.

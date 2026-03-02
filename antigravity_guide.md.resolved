@@ -1,0 +1,84 @@
+# Antigravity Extension: Testing & Publishing Guide
+
+This guide provides a specific step-by-step for the **Antigravity** version of the Impeccable extension.
+
+---
+
+## 1. Local Testing (Step-by-Step)
+
+To test the extension within the Antigravity IDE before publishing:
+
+1.  **Open the Extension Folder**: 
+    Open Visual Studio Code and navigate to `dist/antigravity/vscode-extension`.
+
+2.  **Install Dependencies**: 
+    Open a terminal in that folder and run:
+    ```bash
+    npm install
+    ```
+
+3.  **Compile the Code**: 
+    Run the TypeScript compiler:
+    ```bash
+    npm run compile
+    ```
+
+4.  **Launch Extension Development Host**:
+    - Press **F5** in VS Code.
+    - A new "Extension Development Host" window will open.
+    - **Note**: To simulate the Antigravity environment, this window is where you'll verify the functionality.
+
+5.  **Verify Antigravity UI**:
+    - Look at the bottom right status bar for the "**✨ Impeccable**" icon.
+    - Click it to see the list of design commands.
+
+6.  **Verify Skill Injection**:
+    - In the Chat of the development window, type `/`.
+    - You should see the Impeccable design commands (like `/audit`, `/polish`) listed. The Antigravity agent automatically picks up these commands because they are registered in the [package.json](file:///c:/Users/ronch/OneDrive/Documenti/repository%20github/impeccable/package.json) under `antigravity.skills`.
+
+---
+
+## 2. Publishing to the Marketplace (Step-by-Step)
+
+The Antigravity extension is a standard VS Code extension that uses custom contribution points. The publishing process is identical to standard VS Code extensions.
+
+1.  **Install the Publishing Tool**:
+    ```bash
+    npm install -g @vscode/vsce
+    ```
+
+2.  **Prepare your Marketplace Account**:
+    - Create an organization at [aex.dev.azure.com](https://aex.dev.azure.com).
+    - Generate a **Personal Access Token (PAT)** with "Marketplace (Manage)" scope.
+    - Create a **Publisher** at the [Marketplace Management Console](https://marketplace.visualstudio.com/manage).
+
+3.  **Configure [package.json](file:///c:/Users/ronch/OneDrive/Documenti/repository%20github/impeccable/package.json)**:
+    Ensure the `publisher` field in `dist/antigravity/vscode-extension/package.json` matches your Marketplace publisher name.
+
+4.  **Login via CLI**:
+    ```bash
+    vsce login <your-publisher-name>
+    # Paste your PAT when prompted
+    ```
+
+5.  **Publish the Extension**:
+    In the `dist/antigravity/vscode-extension` folder, run:
+    ```bash
+    vsce publish
+    ```
+
+6.  **Verify on Marketplace**:
+    Once uploaded (it takes a few minutes for validation), the extension will be available. Users can install it, and their Antigravity agent will immediately gain the Impeccable design skills.
+
+---
+
+## 3. Alternative: Manual Installation (.vsix)
+
+If you don't want to publish to the public store yet:
+
+1.  **Package the extension**: 
+    Run `vsce package` in the extension folder. This creates a `.vsix` file.
+2.  **Install manually**: 
+    In Antigravity IDE, go to the Extensions view, click the `...` menu, and select **Install from VSIX...**.
+3.  **Result**: 
+    The extension and the design skills are now active and ready to use!
