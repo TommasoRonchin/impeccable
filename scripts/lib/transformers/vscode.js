@@ -49,18 +49,6 @@ export function transformVSCode(commands, skills, distDir, patterns = null, opti
                     title: "Impeccable: Show Design Commands",
                     category: "Impeccable"
                 }
-            ],
-            chatParticipants: [
-                {
-                    id: "impeccable",
-                    name: "impeccable",
-                    description: "Impeccable Frontend Design Expert",
-                    isDefault: false,
-                    commands: commands.map(c => ({
-                        name: `${prefix}${c.name}`,
-                        description: c.description
-                    }))
-                }
             ]
         }
     };
@@ -95,48 +83,55 @@ export function transformVSCode(commands, skills, distDir, patterns = null, opti
                 request: "launch",
                 args: [
                     "--extensionDevelopmentPath=${workspaceFolder}"
-                ]
+                ],
+                outFiles: [
+                    "${workspaceFolder}/dist/**/*.js"
+                ],
+                preLaunchTask: "${defaultBuildTask}"
             }
         ]
     };
 
     writeFile(path.join(vscodeConfigDir, 'launch.json'), JSON.stringify(launchJson, null, 2));
 
+    const tasksJson = {
+        version: "2.0.0",
+        tasks: [
+            {
+                type: "npm",
+                script: "watch",
+                problemMatcher: "$tsc-watch",
+                isBackground: true,
+                presentation: {
+                    reveal: "never"
+                },
+                group: {
+                    kind: "build",
+                    isDefault: true
+                }
+            }
+        ]
+    };
+
+    writeFile(path.join(vscodeConfigDir, 'tasks.json'), JSON.stringify(tasksJson, null, 2));
+
     // 2. Create extension.ts
     const commandItems = commands.map(c => ({
         label: `/${prefix}${c.name}`,
         description: c.description,
-        detail: "Click to see details in chat"
+        detail: "Click to see details in chat",
+        body: c.body
     }));
+
+    const skillContext = skills.map(s => s.body).join('\n\n--- SKILL CONTEXT ---\n\n');
+    const escapedSkillContext = skillContext.replace(/`/g, '\\`').replace(/\$/g, '\\$');
 
     let extensionTs = `import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-    // 1. Register Chat Participant
-    const handler: vscode.ChatRequestHandler = async (request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken) => {
-        if (request.command) {
-            switch (request.command) {
-`;
+    const baseContext = \`${escapedSkillContext}\`;
 
-    for (const command of commands) {
-        const commandName = `${prefix}${command.name}`;
-        const body = replacePlaceholders(command.body, 'vscode').replace(/`/g, '\\`').replace(/\$/g, '\\$');
-        extensionTs += `                case '${commandName}':
-                    stream.markdown(\`${body}\`);
-                    return;
-`;
-    }
-
-    extensionTs += `            }
-        }
-
-        stream.markdown("I am your Impeccable Frontend Design Expert. Ask me to /audit, /polish, or /simplify your UI.");
-    };
-
-    const impeccable = vscode.chat.createChatParticipant('impeccable', handler);
-    impeccable.iconPath = vscode.Uri.joinPath(context.extensionUri, 'icon.png');
-
-    // 2. Status Bar Item
+    // 1. Status Bar Item
     const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
     statusBarItem.command = 'impeccable.showCommands';
     statusBarItem.text = '$(sparkle) Impeccable';
@@ -144,18 +139,24 @@ export function activate(context: vscode.ExtensionContext) {
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
 
-    // 3. Command Palette / Status Bar Command
+    // 2. Command Palette / Status Bar Command
     const disposable = vscode.commands.registerCommand('impeccable.showCommands', async () => {
         const items = ${JSON.stringify(commandItems, null, 12)};
         
         const selection = await vscode.window.showQuickPick(items, {
-            placeHolder: 'Select an Impeccable command to learn more'
+            placeHolder: 'Select an Impeccable command to apply to your project'
         });
 
         if (selection) {
-            vscode.commands.executeCommand('workbench.action.chat.open', {
-                query: \`@impeccable \${selection.label}\`
+            // First open the chat panel, then send the system prompt + objective + #workspace
+            await vscode.commands.executeCommand('workbench.action.chat.open', {
+                query: \`#workspace \\n\\nContext Guidelines:\\n\${baseContext}\\n\\nYour Task:\\n\${selection.body}\`
             });
+
+            // Attempt to auto-submit the chat
+            setTimeout(() => {
+                vscode.commands.executeCommand('workbench.action.chat.acceptInput');
+            }, 500);
         }
     });
 
