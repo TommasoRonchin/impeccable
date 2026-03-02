@@ -71,7 +71,8 @@ export function transformAntigravity(commands, skills, distDir, patterns = null,
     const commandItems = commands.map(c => ({
         label: `/${prefix}${c.name}`,
         description: c.description,
-        detail: "Execute Impeccable Design Command"
+        body: replacePlaceholders(c.body, 'antigravity'),
+        filename: `cmd-${prefix}${c.name}.md`
     }));
 
     const pkg = {
@@ -197,7 +198,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     installSkills();
 
-    // 2. Register Chat Participant
+    // 3. Register Chat Participant
     const handler: vscode.ChatRequestHandler = async (request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken) => {
         if (request.command) {
             switch (request.command) {
@@ -215,7 +216,7 @@ ${commands.map(c => {
 
     const impeccableParticipant = vscode.chat.createChatParticipant('impeccable', handler);
 
-    // 3. Status Bar Item
+    // 4. Status Bar Item
     const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
     statusBarItem.command = 'impeccable.antigravity.showCommands';
     statusBarItem.text = '$(sparkle) Impeccable';
@@ -223,7 +224,7 @@ ${commands.map(c => {
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
 
-    // 4. Quick Pick Command
+    // 5. Quick Pick Command
     const disposable = vscode.commands.registerCommand('impeccable.antigravity.showCommands', async () => {
         const items = ${JSON.stringify(commandItems, null, 12)};
         
@@ -232,13 +233,64 @@ ${commands.map(c => {
         });
 
         if (selection) {
-            // Try to use antigravity.sendTextToChat if it exists, otherwise fallback to pre-fill
-            try {
-                await vscode.commands.executeCommand('antigravity.sendTextToChat', selection.label);
-            } catch {
-                vscode.commands.executeCommand('workbench.action.chat.open', {
-                    query: selection.label
-                });
+            vscode.window.showInformationMessage("Impeccable: Activating " + selection.label + "...");
+            
+            const tryCommands = async () => {
+                // Determine absolute path to the workflow file for proper linking
+                let fileUri = \`.agent/workflows/\${selection.filename}\`;
+                if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+                    const vscodeUri = require('vscode').Uri;
+                    const folderUri = vscode.workspace.workspaceFolders[0].uri;
+                    fileUri = vscodeUri.joinPath(folderUri, '.agent', 'workflows', selection.filename).toString();
+                }
+
+                // Focus/Open Commands
+                const setupCommands = [
+                    'antigravity.toggleChatFocus',
+                    'antigravity.openAgent',
+                    'workbench.action.chat.open'
+                ];
+
+                // Injection Commands
+                const injectCommands: [string, ...any[]][] = [
+                    ['antigravity.sendPromptToAgentPanel', selection.body],
+                    ['antigravity.sendPromptToAgentPanel', { text: selection.body }],
+                    ['antigravity.sendPromptToAgentPanel', { prompt: selection.body }]
+                ];
+
+                // Step 1: Open panel
+                for (const setup of setupCommands) {
+                    try { await vscode.commands.executeCommand(setup); break; } catch (e) {}
+                }
+
+                // Step 2: Try specific Antigravity injection (if it throws, it moves to step 3)
+                let injected = false;
+                for (const [id, ...args] of injectCommands) {
+                    try {
+                        console.log("Impeccable: Attempting " + id);
+                        await vscode.commands.executeCommand(id, ...args);
+                        injected = true;
+                        break;
+                    } catch (e) {}
+                }
+
+                // Step 3: The standard VS Code fallback (highly reliable but might open a different panel)
+                if (!injected) {
+                    try {
+                        console.log("Impeccable: Attempting workbench.action.chat.open");
+                        await vscode.commands.executeCommand('workbench.action.chat.open', {
+                            query: selection.label
+                        });
+                        injected = true;
+                    } catch (e) {}
+                }
+
+                return injected;
+            };
+
+            const success = await tryCommands();
+            if (!success) {
+                vscode.window.showWarningMessage('Impeccable: Manual action required. Please type / in chat.');
             }
         }
     });
