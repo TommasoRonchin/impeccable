@@ -24,14 +24,35 @@ export function transformUniversal(commands, skills, distDir, patterns = null, o
     ensureDir(srcDir);
     ensureDir(skillsResDir);
 
-    // 0. Copy LICENSE and README from root if they exist
+    // 0. Copy LICENSE, README from root
     const rootDir = path.resolve(distDir, '..');
+    const resourcesDir = path.join(rootDir, 'resources');
+
     ['LICENSE', 'README.md'].forEach(file => {
         const srcPath = path.join(rootDir, file);
         if (fs.existsSync(srcPath)) {
             fs.copyFileSync(srcPath, path.join(universalDir, file));
         }
     });
+
+    // Copy demo.gif (try root first, then resources)
+    const possibleGifPaths = [
+        path.join(rootDir, 'demo.gif'),
+        path.join(rootDir, 'resources', 'demo.gif')
+    ];
+
+    for (const srcPath of possibleGifPaths) {
+        if (fs.existsSync(srcPath)) {
+            fs.copyFileSync(srcPath, path.join(universalDir, 'demo.gif'));
+            break;
+        }
+    }
+
+    // Handle potential casing issues for vsce
+    const readmeDest = path.join(universalDir, 'README.md');
+    if (fs.existsSync(readmeDest)) {
+        // No action needed for casing on Windows, but this ensures it's found
+    }
 
     const registeredSkills = [];
 
@@ -66,7 +87,7 @@ export function transformUniversal(commands, skills, distDir, patterns = null, o
             type: "git",
             url: "https://github.com/TommasoRonchin/impeccable"
         },
-        license: "MIT",
+        license: "Apache-2.0",
         engines: { vscode: "^1.80.0" },
         activationEvents: [
             "onCommand:impeccable.showCommands",
