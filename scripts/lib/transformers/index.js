@@ -4,4 +4,4 @@ export { transformGemini } from './gemini.js';
 export { transformCodex } from './codex.js';
 export { transformAntigravity } from './antigravity.js';
 export { transformVSCode } from './vscode.js';
-
+export { transformUniversal } from './universal.js';

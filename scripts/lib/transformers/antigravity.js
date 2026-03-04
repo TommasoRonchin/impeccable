@@ -89,10 +89,11 @@ export function transformAntigravity(commands, skills, distDir, patterns = null,
         scripts: {
             "compile": "tsc -p ./",
             "watch": "tsc -watch -p ./",
-            "package": "vsce package"
+            "package": "npm run compile && npx @vscode/vsce package --allow-star-activation --allow-missing-repository"
         },
         devDependencies: {
             "@types/vscode": "^1.80.0",
+            "@vscode/vsce": "^3.0.0",
             "typescript": "^5.1.3"
         },
         contributes: {

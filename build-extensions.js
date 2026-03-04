@@ -4,7 +4,8 @@ import { fileURLToPath } from 'url';
 import { readSourceFiles, readPatterns } from './scripts/lib/utils.js';
 import {
     transformAntigravity,
-    transformVSCode
+    transformVSCode,
+    transformUniversal
 } from './scripts/lib/transformers/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +28,9 @@ async function main() {
 
     // Transform for VS Code
     transformVSCode(commands, skills, DIST_DIR, patterns);
+
+    // Transform for Universal (VS Code + Antigravity)
+    transformUniversal(commands, skills, DIST_DIR, patterns);
 
     console.log('\n✅ Extensions regenerated in ./dist/');
 }
