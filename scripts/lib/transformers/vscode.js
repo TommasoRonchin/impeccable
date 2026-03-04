@@ -25,7 +25,7 @@ export function transformVSCode(commands, skills, distDir, patterns = null, opti
         name: "impeccable-vscode",
         displayName: "Impeccable Frontend Design",
         description: "Frontend design expertise for GitHub Copilot Chat",
-        version: "1.0.0",
+        version: "1.0.1",
         publisher: "impeccable",
         engines: {
             vscode: "^1.80.0"

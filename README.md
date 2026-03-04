@@ -14,6 +14,12 @@ To see Impeccable in action and view design examples, visit **[impeccable.style]
 
 ---
 
+## Download
+
+Install the extension directly from the **[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=TommasoRonchin.impeccable-universal)**.
+
+---
+
 ## Demonstration
 
 To use Impeccable in your IDE:

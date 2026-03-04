@@ -79,7 +79,7 @@ export function transformAntigravity(commands, skills, distDir, patterns = null,
         name: "impeccable-antigravity",
         displayName: "Impeccable for Antigravity",
         description: "Frontend design expertise for the Antigravity agent",
-        version: "1.0.0",
+        version: "1.0.1",
         publisher: "impeccable",
         engines: {
             vscode: "^1.80.0"

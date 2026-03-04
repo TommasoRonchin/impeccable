@@ -75,9 +75,9 @@ export function transformUniversal(commands, skills, distDir, patterns = null, o
     // 3. Create package.json with BOTH contributions
     const pkg = {
         name: "impeccable-universal",
-        displayName: "Impeccable Universal",
-        description: "Official porting of Impeccable (impeccable.style) for VS Code and Antigravity.",
-        version: "1.0.0",
+        displayName: "Impeccable: Premium UI Design Expertise",
+        description: "Professional design guidance for AI-driven development. Unofficial porting of Impeccable (original by Paul Bakaus) for VS Code and Antigravity.",
+        version: "1.0.1",
         publisher: "TommasoRonchin",
         repository: {
             type: "git",
