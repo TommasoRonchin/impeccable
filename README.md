@@ -1,6 +1,6 @@
 # Impeccable for VS Code & Antigravity
 
-This is an **unofficial porting** developed by **[Tommaso Ronchin](https://tommasoronchin.it/)** for Visual Studio Code and [Antigravity](https://antigravity.style/).
+This is an **unofficial porting** developed by **[Tommaso Ronchin](https://tommasoronchin.it/)** for Visual Studio Code and Antigravity.
 
 The original **[Impeccable](https://impeccable.style/)** tool was created and developed by **[Paul Bakaus](https://paulbakaus.com/)**. The source code for this port is available on **[GitHub](https://github.com/TommasoRonchin/impeccable)**.
 
@@ -20,7 +20,7 @@ To use Impeccable in your IDE:
 1. Click the ✨ **Impeccable** button in the status bar at the bottom.
 2. Select the desired design tool from the menu (e.g., `/audit`, `/polish`).
 
-![Impeccable Demo](demo.gif)
+![Impeccable Demo](https://i.imgur.com/pg2BAGF.gif)
 
 > **Note:** In **VS Code**, the dedicated chat participant (`@impeccable`) is currently not available due to platform limitations. However, you can still use all features via the status bar, which will correctly initiate the task in your main chat window.
 

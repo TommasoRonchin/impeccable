@@ -35,18 +35,14 @@ export function transformUniversal(commands, skills, distDir, patterns = null, o
         }
     });
 
-    // Copy demo.gif (try root first, then resources)
-    const possibleGifPaths = [
-        path.join(rootDir, 'demo.gif'),
-        path.join(rootDir, 'resources', 'demo.gif')
-    ];
-
-    for (const srcPath of possibleGifPaths) {
+    // Copy resources (demo.gif, icon.png)
+    const resources = ['demo.gif', 'icon.png'];
+    resources.forEach(file => {
+        const srcPath = path.join(rootDir, 'resources', file);
         if (fs.existsSync(srcPath)) {
-            fs.copyFileSync(srcPath, path.join(universalDir, 'demo.gif'));
-            break;
+            fs.copyFileSync(srcPath, path.join(universalDir, file));
         }
-    }
+    });
 
     // Handle potential casing issues for vsce
     const readmeDest = path.join(universalDir, 'README.md');
@@ -79,15 +75,16 @@ export function transformUniversal(commands, skills, distDir, patterns = null, o
     // 3. Create package.json with BOTH contributions
     const pkg = {
         name: "impeccable-universal",
-        displayName: "Impeccable Frontend Design (Universal)",
-        description: "Frontend design expertise for VS Code and Antigravity",
+        displayName: "Impeccable Universal",
+        description: "Official porting of Impeccable (impeccable.style) for VS Code and Antigravity.",
         version: "1.0.0",
-        publisher: "impeccable",
+        publisher: "TommasoRonchin",
         repository: {
             type: "git",
             url: "https://github.com/TommasoRonchin/impeccable"
         },
         license: "Apache-2.0",
+        icon: "icon.png",
         engines: { vscode: "^1.80.0" },
         activationEvents: [
             "onCommand:impeccable.showCommands",
