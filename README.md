@@ -16,7 +16,7 @@ To see Impeccable in action and view design examples, visit **[impeccable.style]
 
 ## Download
 
-Install the extension directly from the **[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=TommasoRonchin.impeccable-universal)**.
+Install the extension directly from the **[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=TommasoRonchin.impeccable-universal)**, or by searching for **"Impeccable"** directly in the Visual Studio Code or Antigravity extension stores.
 
 ---
 
